@@ -1,51 +1,30 @@
 # qmlkit
 
-`qmlkit` is a quantum-inspired and hybrid ML SDK for AI engineers.
+**Quantum-inspired ML primitives for PyTorch and scikit-learn. Classical by default.**
 
-It is not a quantum physics SDK and it does not require quantum hardware. The
-goal is to give developers simple, composable ML abstractions that feel natural
-in PyTorch and scikit-learn workflows while leaving room for future quantum
-backend adapters.
+`qmlkit` is a small Python SDK for AI engineers who want to experiment with
+quantum-inspired kernels, feature maps, and hybrid neural layers without
+learning circuit DSLs or needing quantum hardware.
+
+It is intentionally ML-first:
+
+- use it inside normal `sklearn` pipelines;
+- drop `HybridLayer` into a PyTorch model;
+- run everything locally on CPU by default;
+- keep Qiskit, PennyLane, and Cirq as future backend targets, not required dependencies.
 
 > Status: public alpha. qmlkit is useful for experimentation, demos, and early
 > feedback. It does not make quantum advantage claims.
 
-## What is included in v0.1
+## Quick Start
 
-- `QuantumFeatureMap`: a scikit-learn-style transformer for nonlinear quantum-inspired feature maps.
-- `QuantumKernel`: compatibility alias for the v0.1 sklearn API.
-- `HybridLayer`: a differentiable PyTorch layer with simulated quantum-like rotations and mixing.
-- `SimulatorBackend`: a lightweight NumPy backend for CPU execution.
-- Placeholder `QiskitBackend` and `PennyLaneBackend` classes for future integrations.
-- Toy benchmark utilities and two runnable examples.
-
-## Install
-
-Core install:
+Install from GitHub:
 
 ```bash
-pip install .
+pip install "qmlkit @ git+https://github.com/cdznho/qmlkit.git"
 ```
 
-With scikit-learn examples and benchmarks:
-
-```bash
-pip install ".[sklearn]"
-```
-
-With PyTorch support:
-
-```bash
-pip install ".[torch]"
-```
-
-For development:
-
-```bash
-pip install ".[dev]"
-```
-
-## Example: sklearn pipeline
+Use a quantum-inspired feature map in a standard sklearn classifier:
 
 ```python
 from qmlkit import QuantumKernel
@@ -61,30 +40,7 @@ model.fit(X_train, y_train)
 predictions = model.predict(X_test)
 ```
 
-`QuantumKernel` supports:
-
-- `"iqp"`: deterministic trigonometric interaction features.
-- `"random"`: random Fourier-style nonlinear projections.
-- `"tensor"`: compact tensor-product-inspired features.
-
-You can also compute a Gram matrix directly:
-
-```python
-kernel = QuantumKernel(method="iqp").fit(X_train)
-K_train = kernel.kernel_matrix(X_train)
-K_test = kernel.kernel_matrix(X_test, X_train)
-```
-
-For new code, `QuantumFeatureMap` is the clearer name for the same explicit
-feature-map API:
-
-```python
-from qmlkit import QuantumFeatureMap
-
-features = QuantumFeatureMap(method="tensor").fit_transform(X_train)
-```
-
-## Example: PyTorch layer
+Use a simulated hybrid layer in PyTorch:
 
 ```python
 import torch
@@ -106,14 +62,98 @@ model = Model()
 out = model(torch.randn(16, 4))
 ```
 
-## Run examples
+## Why qmlkit?
+
+Most quantum ML tooling starts at the circuit level. That is powerful, but it
+can feel far away from everyday ML workflows.
+
+qmlkit starts where ML engineers already work:
+
+- `fit`, `transform`, and `Pipeline` for sklearn users;
+- `nn.Module` for PyTorch users;
+- NumPy simulation for zero-hardware experimentation;
+- thin backend abstractions for future quantum integrations.
+
+The goal is not to replace Qiskit or PennyLane. The goal is to provide a higher
+level ML abstraction that can eventually sit above them.
+
+## What Is Included In v0.1
+
+| API | What it does |
+| --- | --- |
+| `QuantumFeatureMap` | sklearn-style transformer for nonlinear quantum-inspired feature maps. |
+| `QuantumKernel` | Compatibility alias for the v0.1 sklearn API. |
+| `HybridLayer` | Differentiable PyTorch layer with simulated quantum-like rotations and mixing. |
+| `SimulatorBackend` | Lightweight NumPy backend for local CPU execution. |
+| `QiskitBackend`, `PennyLaneBackend` | Placeholder adapters for future integrations. |
+| `qmlkit.benchmarks` | Toy datasets and honest baseline comparisons. |
+
+Feature-map methods:
+
+| Method | Description |
+| --- | --- |
+| `"iqp"` | Deterministic trigonometric interaction features. |
+| `"random"` | Random Fourier-style nonlinear projections. |
+| `"tensor"` | Compact tensor-product-inspired feature expansion. |
+
+## Installation Options
+
+Core package only:
+
+```bash
+pip install "qmlkit @ git+https://github.com/cdznho/qmlkit.git"
+```
+
+With scikit-learn support:
+
+```bash
+pip install "qmlkit[sklearn] @ git+https://github.com/cdznho/qmlkit.git"
+```
+
+With PyTorch support:
+
+```bash
+pip install "qmlkit[torch] @ git+https://github.com/cdznho/qmlkit.git"
+```
+
+For local development:
+
+```bash
+git clone https://github.com/cdznho/qmlkit.git
+cd qmlkit
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -e ".[dev]"
+```
+
+## More Examples
+
+Compute explicit features:
+
+```python
+from qmlkit import QuantumFeatureMap
+
+features = QuantumFeatureMap(method="tensor").fit_transform(X_train)
+```
+
+Compute a Gram matrix:
+
+```python
+from qmlkit import QuantumKernel
+
+kernel = QuantumKernel(method="iqp").fit(X_train)
+K_train = kernel.kernel_matrix(X_train)
+K_test = kernel.kernel_matrix(X_test, X_train)
+```
+
+Run bundled examples:
 
 ```bash
 python -m qmlkit.examples.kernel_svm
 python -m qmlkit.examples.hybrid_nn
 ```
 
-## Run benchmarks
+Run a small benchmark:
 
 ```python
 from qmlkit.benchmarks.runner import run_benchmark
@@ -122,29 +162,49 @@ results = run_benchmark(dataset="moons")
 print(results)
 ```
 
-## Run tests
+## Development
 
-```bash
-python3 -m pytest qmlkit/tests
-```
-
-## Project quality checks
+Run tests:
 
 ```bash
 python -m pytest
-python -m ruff check .
-python -m mypy qmlkit
 ```
 
-## Non-goals
+Run quality checks:
 
-`qmlkit` does not build a quantum circuit DSL, execute on real quantum hardware,
-or compete with low-level frameworks such as Qiskit, PennyLane, or Cirq. Those
-projects are excellent circuit-level tools. `qmlkit` sits above that layer and
-focuses on ML-friendly abstractions.
+```bash
+python -m ruff check .
+python -m mypy qmlkit
+python -m build
+```
+
+## Roadmap
+
+- Add example notebooks with honest wins and failures.
+- Improve benchmark coverage across more classical baselines.
+- Add richer sklearn utilities around precomputed kernels.
+- Explore real adapter implementations for Qiskit and PennyLane.
+- Publish stable docs once the v0.1 API gets user feedback.
+
+## Non-Goals
+
+qmlkit does not:
+
+- build a quantum circuit DSL;
+- execute on real quantum hardware in v0.1;
+- claim quantum advantage;
+- compete directly with Qiskit, PennyLane, or Cirq.
+
+Those projects are excellent circuit-level tools. qmlkit focuses on simple,
+developer-friendly ML abstractions above that layer.
 
 ## Contributing
 
-Contributions are welcome once the repository is public. The most useful early
-work is example notebooks, integrations with existing ML pipelines, and honest
-benchmarks against classical baselines.
+Contributions are welcome. The most useful early work is:
+
+- example notebooks;
+- integrations with existing ML workflows;
+- honest benchmarks against classical baselines;
+- API feedback from people actually trying to build with it.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup and development checks.
