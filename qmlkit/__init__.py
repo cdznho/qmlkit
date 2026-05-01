@@ -15,4 +15,4 @@ __all__ = [
     "SimulatorBackend",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"

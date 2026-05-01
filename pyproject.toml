@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "qmlkit"
-version = "0.1.0"
+version = "0.1.1"
 description = "Quantum-inspired and hybrid ML tools for classical Python workflows."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -36,11 +36,16 @@ Source = "https://github.com/cdznho/qmlkit"
 [project.optional-dependencies]
 sklearn = ["scikit-learn>=1.2"]
 torch = ["torch>=2.0"]
+qiskit = ["qiskit>=1.0"]
+pennylane = ["pennylane>=0.35"]
+quantum = ["qiskit>=1.0", "pennylane>=0.35"]
 bench = ["scikit-learn>=1.2", "torch>=2.0"]
 dev = [
   "build>=1.0",
   "mypy>=1.8",
+  "pennylane>=0.35",
   "pytest>=7.0",
+  "qiskit>=1.0",
   "ruff>=0.4",
   "scikit-learn>=1.2",
   "torch>=2.0",

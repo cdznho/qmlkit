@@ -41,6 +41,25 @@ jobs:
       - name: Run tests
         run: python -m pytest
 
+  quantum-tests:
+    name: quantum adapters
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install package with Qiskit and PennyLane
+        run: |
+          python -m pip install -U pip
+          python -m pip install -e ".[quantum]" pytest
+      - name: Run backend examples
+        run: |
+          python -m qmlkit.examples.qiskit_backend
+          python -m qmlkit.examples.pennylane_backend
+      - name: Run tests
+        run: python -m pytest
+
   quality:
     name: quality
     runs-on: ubuntu-latest

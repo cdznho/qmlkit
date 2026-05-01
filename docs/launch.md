@@ -26,7 +26,7 @@ v0.1 includes:
 - sklearn-compatible quantum-inspired feature maps
 - a differentiable PyTorch `HybridLayer`
 - a NumPy simulator backend
-- placeholder Qiskit/PennyLane adapters for future integrations
+- optional Qiskit/PennyLane adapters for local simulator execution
 
 This is a public alpha, not a quantum advantage claim. The goal is to make the
 interface useful first, then let the community help shape what belongs next.

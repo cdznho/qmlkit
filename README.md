@@ -11,7 +11,7 @@ It is intentionally ML-first:
 - use it inside normal `sklearn` pipelines;
 - drop `HybridLayer` into a PyTorch model;
 - run everything locally on CPU by default;
-- keep Qiskit, PennyLane, and Cirq as future backend targets, not required dependencies.
+- optionally run small Qiskit and PennyLane circuits through local simulators.
 
 > Status: public alpha. qmlkit is useful for experimentation, demos, and early
 > feedback. It does not make quantum advantage claims.
@@ -72,7 +72,7 @@ qmlkit starts where ML engineers already work:
 - `fit`, `transform`, and `Pipeline` for sklearn users;
 - `nn.Module` for PyTorch users;
 - NumPy simulation for zero-hardware experimentation;
-- thin backend abstractions for future quantum integrations.
+- optional Qiskit and PennyLane adapters when you want circuit-level interop.
 
 The goal is not to replace Qiskit or PennyLane. The goal is to provide a higher
 level ML abstraction that can eventually sit above them.
@@ -85,7 +85,8 @@ level ML abstraction that can eventually sit above them.
 | `QuantumKernel` | Compatibility alias for the v0.1 sklearn API. |
 | `HybridLayer` | Differentiable PyTorch layer with simulated quantum-like rotations and mixing. |
 | `SimulatorBackend` | Lightweight NumPy backend for local CPU execution. |
-| `QiskitBackend`, `PennyLaneBackend` | Placeholder adapters for future integrations. |
+| `QiskitBackend` | Optional local Qiskit statevector execution for circuits and probabilities. |
+| `PennyLaneBackend` | Optional local PennyLane execution for QNodes and quantum functions. |
 | `qmlkit.benchmarks` | Toy datasets and honest baseline comparisons. |
 
 Feature-map methods:
@@ -114,6 +115,12 @@ With PyTorch support:
 
 ```bash
 pip install "qmlkit[torch] @ git+https://github.com/cdznho/qmlkit.git"
+```
+
+With Qiskit and PennyLane adapters:
+
+```bash
+pip install "qmlkit[quantum] @ git+https://github.com/cdznho/qmlkit.git"
 ```
 
 For local development:
@@ -162,6 +169,35 @@ results = run_benchmark(dataset="moons")
 print(results)
 ```
 
+Run a Qiskit circuit locally:
+
+```python
+from qiskit import QuantumCircuit
+from qmlkit import QiskitBackend
+
+qc = QuantumCircuit(1)
+qc.h(0)
+
+probabilities = QiskitBackend().run(qc)
+print(probabilities)  # {"0": 0.5, "1": 0.5}
+```
+
+Run a PennyLane quantum function locally:
+
+```python
+import pennylane as qml
+from qmlkit import PennyLaneBackend
+
+
+def circuit(theta):
+    qml.RX(theta, wires=0)
+    return qml.probs(wires=0)
+
+
+probabilities = PennyLaneBackend(wires=1).run(circuit, {"theta": 0.0})
+print(probabilities)  # [1. 0.]
+```
+
 ## Development
 
 Run tests:
@@ -183,7 +219,7 @@ python -m build
 - Add example notebooks with honest wins and failures.
 - Improve benchmark coverage across more classical baselines.
 - Add richer sklearn utilities around precomputed kernels.
-- Explore real adapter implementations for Qiskit and PennyLane.
+- Expand Qiskit and PennyLane adapters beyond local simulation.
 - Publish stable docs once the v0.1 API gets user feedback.
 
 ## Non-Goals
