@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If qmlkit helps your work, please cite it."
+title: "qmlkit: Quantum-inspired ML primitives for PyTorch and scikit-learn"
+version: 0.1.1
+date-released: 2026-05-01
+authors:
+  - name: "qmlkit contributors"
+license: MIT
+repository-code: "https://github.com/cdznho/qmlkit"

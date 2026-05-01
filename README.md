@@ -1,5 +1,9 @@
 # qmlkit
 
+[![CI](https://github.com/cdznho/qmlkit/actions/workflows/ci.yml/badge.svg)](https://github.com/cdznho/qmlkit/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 **Quantum-inspired ML primitives for PyTorch and scikit-learn. Classical by default.**
 
 `qmlkit` is a small Python SDK for AI engineers who want to experiment with
@@ -76,6 +80,18 @@ qmlkit starts where ML engineers already work:
 
 The goal is not to replace Qiskit or PennyLane. The goal is to provide a higher
 level ML abstraction that can eventually sit above them.
+
+## Who Should Try It?
+
+qmlkit is a good fit if you are:
+
+- an ML engineer curious about quantum-inspired feature engineering;
+- a student or instructor teaching kernel methods and hybrid models;
+- a researcher who wants quick sklearn/PyTorch baselines before writing circuit code;
+- a builder looking for a small experimental SDK rather than a physics framework.
+
+It is probably not the right tool if you need production quantum hardware
+execution, large-scale benchmark claims, or a full circuit DSL.
 
 ## What Is Included In v0.1
 
@@ -221,6 +237,7 @@ python -m build
 - Add richer sklearn utilities around precomputed kernels.
 - Expand Qiskit and PennyLane adapters beyond local simulation.
 - Publish stable docs once the v0.1 API gets user feedback.
+- Grow from early users to contributors using the [adoption plan](docs/adoption_plan.md).
 
 ## Non-Goals
 

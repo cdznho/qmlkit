@@ -44,6 +44,7 @@ dev = [
   "build>=1.0",
   "mypy>=1.8",
   "pennylane>=0.35",
+  "pre-commit>=3.0",
   "pytest>=7.0",
   "qiskit>=1.0",
   "ruff>=0.4",
@@ -53,6 +54,9 @@ dev = [
 
 [tool.setuptools.packages.find]
 include = ["qmlkit*"]
+
+[tool.setuptools.package-data]
+qmlkit = ["py.typed"]
 
 [tool.pytest.ini_options]
 testpaths = ["qmlkit/tests"]

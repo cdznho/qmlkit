@@ -19,6 +19,7 @@ Run these before opening a pull request:
 python -m pytest
 python -m ruff check .
 python -m mypy qmlkit
+python -m build
 ```
 
 ## Contribution guidelines
@@ -28,10 +29,14 @@ python -m mypy qmlkit
 - Prefer practical ML usability over quantum-theory completeness.
 - Do not add a circuit DSL or real hardware execution in small feature PRs.
 - Add tests for public APIs and behavior changes.
+- Prefer small, reviewable pull requests.
+- Include an example or benchmark when adding public-facing ML behavior.
 
 ## Release checklist
 
 - Update `CHANGELOG.md`.
 - Confirm `python -m pytest` passes.
+- Confirm `python -m ruff check .` and `python -m mypy qmlkit` pass.
+- Confirm `python -m build` succeeds.
 - Confirm examples run with the relevant optional dependencies installed.
 - Tag the release with `vX.Y.Z`.
